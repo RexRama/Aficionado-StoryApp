@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.upload.UploadStoryActivity">
+
+    <ProgressBar
+        android:id="@+id/pb_upload_story"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/cv_bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_detail_story"
+        style="@style/Card.theme"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@id/cv_bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_image_preview"
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:contentDescription="@string/preview_image"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_image_placeholder" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/bt_upload_camera"
+                    style="@style/Button.theme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:drawableStart="@drawable/baseline_camera_alt_24"
+                    android:drawableTint="@color/design_default_color_on_primary"
+                    android:text="@string/camera"
+                    app:layout_constraintStart_toStartOf="@id/ti_upload_description"
+                    app:layout_constraintTop_toBottomOf="@id/iv_image_preview" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/bt_upload_gallery"
+                    style="@style/Button.theme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:drawableStart="@drawable/baseline_add_photo_alternate_24"
+                    android:drawableTint="@color/design_default_color_on_primary"
+                    android:text="@string/gallery"
+                    app:layout_constraintEnd_toEndOf="@id/ti_upload_description"
+                    app:layout_constraintTop_toBottomOf="@id/iv_image_preview"
+                    app:layout_constraintTop_toTopOf="@id/bt_upload_camera" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/ti_upload_description"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="top"
+                    android:hint="@string/description"
+                    app:boxStrokeColor="@color/maroon"
+                    app:layout_constraintEnd_toEndOf="@id/bt_upload_upload"
+                    app:layout_constraintStart_toStartOf="@id/bt_upload_upload"
+                    app:layout_constraintTop_toBottomOf="@id/bt_upload_camera">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ed_add_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="top"
+                        android:inputType="textMultiLine" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:id="@+id/checkbox_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="@id/ti_upload_description"
+                    app:layout_constraintStart_toStartOf="@id/ti_upload_description"
+                    app:layout_constraintTop_toBottomOf="@id/ti_upload_description">
+
+                    <CheckBox
+                        android:id="@+id/cb_setLocation"
+                        android:layout_width="38dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/include_location"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/bt_upload_upload"
+                    style="@style/Button.theme"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:text="@string/upload"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/checkbox_layout" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/maroon"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/maroon"
+            app:itemIconTint="@color/design_default_color_on_primary"
+            app:itemTextColor="@color/design_default_color_on_primary"
+            app:menu="@menu/bottom_nav_menu" />
+    </com.google.android.material.card.MaterialCardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

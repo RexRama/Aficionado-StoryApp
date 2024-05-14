@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_list_story"
+    style="@style/Card.theme"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="4dp"
+    android:transitionName="list_card">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_story_image"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:contentDescription="@string/story_image"
+            android:scaleType="centerCrop"
+            android:transitionName="list_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/tv_story_username"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/username"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:transitionName="list_username"
+            app:layout_constraintStart_toStartOf="@id/iv_story_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_story_image" />
+
+        <TextView
+            android:id="@+id/tv_story_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:text="@string/date_posted"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:transitionName="detail_date_posted"
+            app:layout_constraintBottom_toBottomOf="@id/tv_story_username"
+            app:layout_constraintEnd_toEndOf="@id/iv_story_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_story_image" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

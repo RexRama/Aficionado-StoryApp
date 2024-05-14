@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/to_home"
+        android:enabled="true"
+        android:icon="@drawable/baseline_home_24"
+        android:title="@string/home"
+        />
+    <item
+        android:id="@+id/add_story"
+        android:enabled="true"
+        android:icon="@drawable/outline_add_box_24"
+        android:title="@string/upload_story"
+        />
+
+    <item
+        android:id="@+id/to_location"
+        android:enabled="true"
+        android:icon="@drawable/baseline_location_on_24"
+        android:title="@string/map"
+        />
+
+    <item
+        android:id="@+id/logout"
+        android:enabled="true"
+        android:icon="@drawable/outline_logout_24"
+        android:title="@string/logout"
+        />
+</menu>
