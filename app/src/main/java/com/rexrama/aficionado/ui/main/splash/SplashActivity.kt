@@ -33,7 +33,7 @@ class SplashActivity : AppCompatActivity() {
 
 
     private fun setViewModel(pref: UserPreference) {
-        val viewModelFactory = ViewModelFactory(pref, this)
+        val viewModelFactory = ViewModelFactory(pref)
         viewModel = ViewModelProvider(this, viewModelFactory)[SplashViewModel::class.java]
 
         viewModel.getUser().observe(this) { user ->

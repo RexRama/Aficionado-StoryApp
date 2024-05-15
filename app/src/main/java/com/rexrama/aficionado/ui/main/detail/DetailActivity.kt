@@ -59,14 +59,14 @@ class DetailActivity : AppCompatActivity() {
         val fullScreenView = binding.ivDetailImage
         fullScreenView.setOnClickListener {
             val intentFullScreen = Intent(this@DetailActivity, ViewImageFullScreen::class.java)
-            intentFullScreen.putExtra("imageUri", detailUrl )
+            intentFullScreen.putExtra("imageUri", detailUrl)
             startActivity(intentFullScreen)
         }
     }
 
     private fun setViewModel(dataStore: UserPreference) {
 
-        val viewModelFactory = ViewModelFactory(dataStore, this)
+        val viewModelFactory = ViewModelFactory(dataStore)
         viewModel = ViewModelProvider(this, viewModelFactory)[DetailViewModel::class.java]
 
     }

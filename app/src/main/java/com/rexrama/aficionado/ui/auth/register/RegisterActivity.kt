@@ -125,7 +125,7 @@ class RegisterActivity : AppCompatActivity() {
 
 
     private fun setViewModel(dataStore: UserPreference) {
-        val viewModelFactory = ViewModelFactory(dataStore, this)
+        val viewModelFactory = ViewModelFactory(dataStore)
         viewModel = ViewModelProvider(
             this, viewModelFactory
         )[RegisterViewModel::class.java]
