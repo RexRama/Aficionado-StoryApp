@@ -49,10 +49,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setViewModel(pref: UserPreference) {
-        val viewModelFactory = ViewModelFactory(pref, this)
+        val viewModelFactory = ViewModelFactory(pref)
         viewModel = ViewModelProvider(this, viewModelFactory)[MapsViewModel::class.java]
 
-        viewModel.getUser().observe(this) {user ->
+        viewModel.getUser().observe(this) { user ->
             val token = "Bearer ${user.token}"
             viewModel.getAllStories(token)
         }
@@ -63,7 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun storyLocation(stories: List<ListStoryItem>) {
-        stories.forEach {story ->
+        stories.forEach { story ->
             if (story.lat != null && story.lon != null) {
                 val latLng = LatLng(story.lat, story.lon)
                 val getAddress = getAddressLocation(story.lat, story.lon)
@@ -111,7 +111,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         setMapStyle()
         setMyLocation()
-        // Add a marker in Sydney and move the camera
 
     }
 

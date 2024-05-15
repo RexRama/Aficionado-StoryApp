@@ -47,4 +47,6 @@
     <string name="fullscreen_image_view">Fullscreen image view</string>
     <string name="apps_logo">Apps Logo</string>
     <string name="preview_image">Preview Image</string>
+    <string name="error_request_timeout">Error: Request Timeout</string>
+    <string name="retry">Retry</string>
 </resources>

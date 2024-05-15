@@ -91,40 +91,50 @@ class UploadStoryActivity : AppCompatActivity() {
         binding.btUploadGallery.setOnClickListener { startGallery() }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         viewModel.getUserLocation(this, fusedLocationClient)
-        viewModel.location.observe(this) { location ->
+
+        viewModel.getUser().observe(this) { user ->
+            val token = "Bearer ${user.token}"
+
             binding.btUploadUpload.setOnClickListener {
                 val description = binding.edAddDescription
-                description.error =
-                    if (description.text.toString().isEmpty()) "Enter the description!" else null
-                if (description.error == null) postStory(location.latitude, location.longitude)
+                description.error = if (description.text.toString().isEmpty()) {
+                    "Enter the description!"
+                } else {
+                    null
+                }
+
+                if (description.error == null) {
+                    val location = if (binding.cbSetLocation.isChecked) {
+                        viewModel.location.value
+                    } else {
+                        null
+                    }
+
+                    postStory(
+                        token,
+                        description.text.toString(),
+                        location?.latitude,
+                        location?.longitude
+                    )
+                }
             }
         }
-
-
     }
 
-    private fun postStory(lat: Double, lon: Double) {
+    private fun postStory(token: String, descriptionText: String, lat: Double?, lon: Double?) {
         if (getFile != null) {
             val imageFile = reduceFileImage(getFile as File)
-            val textDescription = binding.edAddDescription.text
-            val description = textDescription.toString().toRequestBody("text/plain".toMediaType())
+            val description = descriptionText.toRequestBody("text/plain".toMediaType())
             val requestImage = imageFile.asRequestBody("image/jpg".toMediaType())
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
                 "photo",
                 imageFile.name,
                 requestImage
             )
-            viewModel.getUser().observe(this) { user ->
-                val token = "Bearer ${user.token}"
-                if (binding.cbSetLocation.isChecked) viewModel.postStory(
-                    token,
-                    this,
-                    imageMultipart,
-                    description,
-                    lat,
-                    lon
-                ) else
-                    viewModel.postStory(token, this, imageMultipart, description, null, null)
+            if (lat != null && lon != null) {
+                viewModel.postStory(token, this, imageMultipart, description, lat, lon)
+            } else {
+                viewModel.postStory(token, this, imageMultipart, description, null, null)
             }
         } else {
             Toast.makeText(this, "Please choose an Image to Upload!", Toast.LENGTH_SHORT).show()
@@ -190,7 +200,7 @@ class UploadStoryActivity : AppCompatActivity() {
     }
 
     private fun setViewModel(pref: UserPreference) {
-        val viewModelFactory = ViewModelFactory(pref, this)
+        val viewModelFactory = ViewModelFactory(pref)
         viewModel = ViewModelProvider(this, viewModelFactory)[UploadStoryViewmodel::class.java]
 
         viewModel.isLoading.observe(this) {

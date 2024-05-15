@@ -12,9 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rexrama.aficionado.R
+import com.rexrama.aficionado.adapter.LoadingAdapter
 import com.rexrama.aficionado.adapter.StoryAdapter
 import com.rexrama.aficionado.data.remote.response.ListStoryItem
 import com.rexrama.aficionado.databinding.ActivityMainBinding
@@ -28,6 +31,7 @@ import com.rexrama.aficionado.utils.dataStore
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+    private lateinit var storyAdapter: StoryAdapter
 
     private var doubleBackToExit = false
 
@@ -43,19 +47,49 @@ class MainActivity : AppCompatActivity() {
         val dataStore = UserPreference.getInstance(dataStore)
         setViewModel(dataStore)
         setBackButton()
-        fetchStories()
-
         setPermission()
-
-
     }
 
-    private fun fetchStories() {
+    private fun setView() {
+        storyAdapter = StoryAdapter()
+        binding.rvStories.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = storyAdapter.withLoadStateFooter(
+                footer = LoadingAdapter { storyAdapter.retry() }
+            )
+        }
+
+        storyAdapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallBack {
+            override fun onItemClicked(data: ListStoryItem) {
+                val toDetail = Intent(this@MainActivity, DetailActivity::class.java).apply {
+                    putExtra("name", data.name)
+                    putExtra("url", data.photoUrl)
+                    putExtra("description", data.description)
+                    putExtra("date", data.createdAt.take(10))
+                }
+                startActivity(toDetail)
+
+            }
+
+        })
+
+        storyAdapter.addLoadStateListener { loadState ->
+            showLoading(loadState)
+        }
+    }
+
+    private fun setViewModel(pref: UserPreference) {
+        val viewModelFactory = ViewModelFactory(pref)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+
         viewModel.getUser()?.observe(this) { user ->
             val token = "Bearer ${user.token}"
             viewModel.setToken(token)
-            viewModel.fetchStories(token)
+            viewModel.fetchStories().observe(this) { pagingData ->
+                storyAdapter.submitData(lifecycle, pagingData)
+            }
         }
+
     }
 
     private fun setPermission() {
@@ -67,12 +101,6 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-    }
-
-    private fun setView() {
-        val recyclerView = binding.rvStories
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
     }
 
 
@@ -99,43 +127,6 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
-
-    private fun setViewModel(pref: UserPreference) {
-        val viewModelFactory = ViewModelFactory(pref, this)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
-
-        viewModel.stories.observe(this) { storyList ->
-            if (storyList.isNotEmpty()) {
-                setStories(storyList)
-            } else {
-                Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        viewModel.loading.observe(this) {
-            showLoading(it)
-        }
-
-
-    }
-
-    private fun setStories(storyList: List<ListStoryItem>) {
-        val storyAdapter = StoryAdapter(storyList)
-        binding.rvStories.adapter = storyAdapter
-
-        storyAdapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallBack {
-            override fun onItemClicked(data: ListStoryItem) {
-                val toDetail = Intent(this@MainActivity, DetailActivity::class.java)
-                toDetail.putExtra("name", data.name)
-                toDetail.putExtra("url", data.photoUrl)
-                toDetail.putExtra("description", data.description)
-                toDetail.putExtra("date", data.createdAt.take(10))
-                startActivity(toDetail)
-            }
-
-        })
-
-    }
 
     private fun setupNavigation(icon: BottomNavigationView) {
         icon.setOnItemSelectedListener {
@@ -181,8 +172,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        binding.pbHome.visibility = if (isLoading) View.VISIBLE else View.GONE
+    private fun showLoading(loadState: CombinedLoadStates) {
+        binding.pbHome.visibility =
+            if (loadState.source.refresh is LoadState.Loading) View.VISIBLE else View.GONE
     }
 
     override fun onRequestPermissionsResult(
@@ -210,7 +202,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private val REQUIRED_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
-            Manifest.permission.ACCESS_FINE_LOCATION)
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
         private const val REQUEST_CODE_PERMISSIONS = 10
     }
 
