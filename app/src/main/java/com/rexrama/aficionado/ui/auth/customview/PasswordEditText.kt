@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import com.google.android.material.textfield.TextInputEditText
+import com.rexrama.aficionado.R
 
 class PasswordEditText : TextInputEditText {
 
@@ -48,7 +49,7 @@ class PasswordEditText : TextInputEditText {
 
     private fun showError() {
 
-        this.error = "Requires 8 characters or more!"
+        this.error = context.getString(R.string.password_requirement)
 
     }
 

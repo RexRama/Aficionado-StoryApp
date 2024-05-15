@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setViewModel(pref: UserPreference) {
-        val viewModelFactory = ViewModelFactory(pref)
+        val viewModelFactory = ViewModelFactory(pref, this)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         viewModel.getUser()?.observe(this) { user ->

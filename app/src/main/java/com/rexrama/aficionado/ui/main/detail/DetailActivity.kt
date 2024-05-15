@@ -66,7 +66,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setViewModel(dataStore: UserPreference) {
 
-        val viewModelFactory = ViewModelFactory(dataStore)
+        val viewModelFactory = ViewModelFactory(dataStore, this)
         viewModel = ViewModelProvider(this, viewModelFactory)[DetailViewModel::class.java]
 
     }

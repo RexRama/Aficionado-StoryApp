@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,6 +14,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.rexrama.aficionado.data.model.UserModel
 import com.rexrama.aficionado.data.remote.api.ApiConfig
 import com.rexrama.aficionado.data.remote.response.StoryResponse
+import com.rexrama.aficionado.utils.DialogUtils
 import com.rexrama.aficionado.utils.UserPreference
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -23,7 +23,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UploadStoryViewmodel(private val pref: UserPreference) : ViewModel() {
+class UploadStoryViewmodel(private val pref: UserPreference, private val dialogUtils: DialogUtils) :
+    ViewModel() {
     private val apiService = ApiConfig.getApiService()
 
     private val _finishActivity = MutableLiveData<Boolean>()
@@ -37,7 +38,6 @@ class UploadStoryViewmodel(private val pref: UserPreference) : ViewModel() {
 
     fun postStory(
         token: String,
-        context: Context,
         imageMultipart: MultipartBody.Part,
         description: RequestBody,
         lat: Double?,
@@ -55,21 +55,21 @@ class UploadStoryViewmodel(private val pref: UserPreference) : ViewModel() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null && !responseBody.error) {
-                        showResultDialog(
+                        dialogUtils.showResultDialog(
                             "Upload Success!",
                             "Upload Story Successful!",
-                            "Proceed",
-                            context
-                        )
+                        ) {
+                            _finishActivity.value = true
+                        }
                     }
                 } else {
-                    showResultDialog("Upload Failed", response.message(), "Okay", context)
+                    dialogUtils.showErrorDialog("Upload Failed", response.message())
                 }
             }
 
             override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
                 _isLoading.value = false
-                showResultDialog("Upload Failed", t.message, "Okay", context)
+                dialogUtils.showErrorDialog("Upload Failed", t.message)
             }
 
         })
@@ -93,26 +93,6 @@ class UploadStoryViewmodel(private val pref: UserPreference) : ViewModel() {
                     _location.value = location
                 }
             }
-        }
-    }
-
-    private fun showResultDialog(
-        title: String,
-        message: String?,
-        posButton: String,
-        context: Context
-    ) {
-        AlertDialog.Builder(context).apply {
-            setTitle(title)
-            setMessage(message)
-            setPositiveButton(posButton) { _, _ ->
-                if (posButton != "Okay") {
-                    _finishActivity.value = true
-                }
-            }
-            setCancelable(false)
-            create()
-            show()
         }
     }
 

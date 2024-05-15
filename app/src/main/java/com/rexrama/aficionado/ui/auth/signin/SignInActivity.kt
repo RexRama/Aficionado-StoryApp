@@ -122,13 +122,13 @@ class SignInActivity : AppCompatActivity() {
 
             if (signInEmail.error == null && signInPassword.error == null) {
                 val user = SignInModel(signInEmail.text.toString(), signInPassword.text.toString())
-                viewModel.userSignIn(user, this)
+                viewModel.userSignIn(user)
             }
         }
     }
 
     private fun setViewModel(dataStore: UserPreference) {
-        val viewModelFactory = ViewModelFactory(dataStore)
+        val viewModelFactory = ViewModelFactory(dataStore, this )
         viewModel = ViewModelProvider(
             this, viewModelFactory
         )[SignInViewModel::class.java]

@@ -1,18 +1,17 @@
 package com.rexrama.aficionado.ui.auth.register
 
-import android.app.AlertDialog
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rexrama.aficionado.data.model.RegisterModel
 import com.rexrama.aficionado.data.remote.api.ApiConfig
 import com.rexrama.aficionado.data.remote.response.RegisterResponse
+import com.rexrama.aficionado.utils.DialogUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(private val dialogUtils: DialogUtils) : ViewModel() {
     private val apiService = ApiConfig.getApiService()
 
     private val _moveActivity = MutableLiveData<Unit>()
@@ -22,7 +21,7 @@ class RegisterViewModel : ViewModel() {
     val isLoading: LiveData<Boolean> = _isLoading
 
 
-    fun userRegistration(user: RegisterModel, context: Context) {
+    fun userRegistration(user: RegisterModel) {
         _isLoading.value = true
         val client = apiService.userRegister(user)
         client.enqueue(object : Callback<RegisterResponse> {
@@ -34,49 +33,24 @@ class RegisterViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null && !responseBody.error) {
-                        resultDialog(
+                        dialogUtils.showResultDialog(
                             "Account Successfully Created",
-                            "Your Account has been created. Please login to continue!",
-                            context
-                        )
+                            "Your Account has been created. Please login to continue!"
+                        ) {
+                            _moveActivity.value = Unit
+                        }
                     } else {
-                        resultDialog("Registration Failed", response.message(), context)
+                        dialogUtils.showErrorDialog("Registration Failed", response.message())
                     }
                 } else if (response.code() == 400) {
-                    resultDialog("Registration Failed", "Email already taken!", context)
+                    dialogUtils.showErrorDialog("Registration Failed", "Email already taken!")
                 }
             }
 
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
                 _isLoading.value = false
-                resultDialog("Registration Failed", t.message, context)
+                dialogUtils.showErrorDialog("Registration Failed", t.message)
             }
         })
-    }
-
-    private fun resultDialog(title: String, message: String?, context: Context) {
-        if (title == "Registration Failed") {
-            AlertDialog.Builder(context).apply {
-                setTitle(title)
-                setMessage(message)
-                setPositiveButton("Retry") { _, _ ->
-                }
-                setCancelable(false)
-                create()
-                show()
-            }
-        } else {
-            AlertDialog.Builder(context).apply {
-                setTitle(title)
-                setMessage(message)
-                setPositiveButton("Proceed") { _, _ ->
-                    _moveActivity.value = Unit
-                }
-                setCancelable(false)
-                create()
-                show()
-            }
-
-        }
     }
 }

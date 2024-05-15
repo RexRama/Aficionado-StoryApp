@@ -117,7 +117,7 @@ class RegisterActivity : AppCompatActivity() {
                     regEmail.text.toString(),
                     regPassword.text.toString()
                 )
-                viewModel.userRegistration(user, this)
+                viewModel.userRegistration(user)
             }
 
         }
@@ -125,7 +125,7 @@ class RegisterActivity : AppCompatActivity() {
 
 
     private fun setViewModel(dataStore: UserPreference) {
-        val viewModelFactory = ViewModelFactory(dataStore)
+        val viewModelFactory = ViewModelFactory(dataStore, this)
         viewModel = ViewModelProvider(
             this, viewModelFactory
         )[RegisterViewModel::class.java]

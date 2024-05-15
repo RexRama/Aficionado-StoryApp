@@ -132,9 +132,9 @@ class UploadStoryActivity : AppCompatActivity() {
                 requestImage
             )
             if (lat != null && lon != null) {
-                viewModel.postStory(token, this, imageMultipart, description, lat, lon)
+                viewModel.postStory(token, imageMultipart, description, lat, lon)
             } else {
-                viewModel.postStory(token, this, imageMultipart, description, null, null)
+                viewModel.postStory(token, imageMultipart, description, null, null)
             }
         } else {
             Toast.makeText(this, "Please choose an Image to Upload!", Toast.LENGTH_SHORT).show()
@@ -200,7 +200,7 @@ class UploadStoryActivity : AppCompatActivity() {
     }
 
     private fun setViewModel(pref: UserPreference) {
-        val viewModelFactory = ViewModelFactory(pref)
+        val viewModelFactory = ViewModelFactory(pref, this)
         viewModel = ViewModelProvider(this, viewModelFactory)[UploadStoryViewmodel::class.java]
 
         viewModel.isLoading.observe(this) {
