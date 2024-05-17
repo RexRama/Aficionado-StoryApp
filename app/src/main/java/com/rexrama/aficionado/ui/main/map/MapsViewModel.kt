@@ -5,11 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.rexrama.aficionado.data.model.UserModel
 import com.rexrama.aficionado.data.remote.api.ApiConfig
 import com.rexrama.aficionado.data.remote.response.ListStoryItem
 import com.rexrama.aficionado.data.remote.response.StoryResponse
 import com.rexrama.aficionado.utils.UserPreference
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,6 +52,12 @@ class MapsViewModel(private val pref: UserPreference): ViewModel() {
 
     fun getUser(): LiveData<UserModel> {
         return pref.getUser().asLiveData()
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            pref.logout()
+        }
     }
 
 

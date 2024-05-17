@@ -1,6 +1,8 @@
 package com.rexrama.aficionado.ui.main.map
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Geocoder
@@ -19,9 +21,11 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rexrama.aficionado.R
 import com.rexrama.aficionado.data.remote.response.ListStoryItem
 import com.rexrama.aficionado.databinding.ActivityMapsBinding
+import com.rexrama.aficionado.ui.auth.welcome.WelcomeActivity
 import com.rexrama.aficionado.utils.UserPreference
 import com.rexrama.aficionado.utils.Util
 import com.rexrama.aficionado.utils.ViewModelFactory
@@ -44,8 +48,57 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setViewModel(pref)
         setUpMap()
         setBackButton()
+        val bottomNavigation: BottomNavigationView = binding.bottomNavigation
+        bottomNavigation.selectedItemId = R.id.to_location
+        setNavigation(bottomNavigation)
 
 
+    }
+
+    private fun setNavigation(item: BottomNavigationView) {
+        item.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.to_home -> {
+                    Util().toHome(this)
+                    finish()
+                    return@setOnItemSelectedListener true
+                }
+
+                R.id.add_story -> {
+                    Util().toUpload(this)
+                    finish()
+                    return@setOnItemSelectedListener true
+                }
+
+                R.id.to_location -> {
+                    Util().toLocation(this)
+                    return@setOnItemSelectedListener true
+                }
+
+                R.id.logout -> {
+                    AlertDialog.Builder(this).apply {
+                        setTitle("LogOut")
+                        setMessage("Are you sure you want to logout?")
+                        setPositiveButton("Yes") { _, _ ->
+                            viewModel.logout()
+                            val intent = Intent(context, WelcomeActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                        setNegativeButton("No") { _, _ ->
+
+                        }
+                        create()
+                        show()
+                    }
+                    return@setOnItemSelectedListener true
+                }
+
+                else -> false
+            }
+        }
     }
 
     private fun setViewModel(pref: UserPreference) {
