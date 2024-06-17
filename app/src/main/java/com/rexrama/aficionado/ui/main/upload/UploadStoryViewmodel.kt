@@ -44,11 +44,7 @@ class UploadStoryViewmodel(private val pref: UserPreference, private val dialogU
         lon: Double?
     ) {
         _isLoading.value = true
-        val client = if (lat == null && lon == null) apiService.postStory(
-            token,
-            imageMultipart,
-            description
-        ) else apiService.postStoryWithLocation(token, imageMultipart, description, lat, lon)
+        val client = apiService.postStoryWithLocation(token, imageMultipart, description, lat, lon)
         client.enqueue(object : Callback<StoryResponse> {
             override fun onResponse(call: Call<StoryResponse>, response: Response<StoryResponse>) {
                 _isLoading.value = false
@@ -105,4 +101,5 @@ class UploadStoryViewmodel(private val pref: UserPreference, private val dialogU
     fun getUser(): LiveData<UserModel> {
         return pref.getUser().asLiveData()
     }
+
 }

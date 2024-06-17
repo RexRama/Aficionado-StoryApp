@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.Aficionado" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.Aficionado" parent="Theme.Material3.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryVariant">@color/maroon</item>
@@ -11,7 +11,8 @@
         <item name="colorOnSecondary">@color/black</item>
         <item name="android:textColor">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/grey</item>
+        <item name="android:statusBarColor">@color/maroon</item>
+        <item name="android:navigationBarColor">@color/maroon</item>
         <!-- Customize your theme here. -->
     </style>
 

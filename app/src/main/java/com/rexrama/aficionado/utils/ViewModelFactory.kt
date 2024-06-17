@@ -9,6 +9,7 @@ import com.rexrama.aficionado.ui.auth.signin.SignInViewModel
 import com.rexrama.aficionado.ui.main.detail.DetailViewModel
 import com.rexrama.aficionado.ui.main.home.MainViewModel
 import com.rexrama.aficionado.ui.main.map.MapsViewModel
+import com.rexrama.aficionado.ui.main.profile.ProfileViewModel
 import com.rexrama.aficionado.ui.main.splash.SplashViewModel
 import com.rexrama.aficionado.ui.main.upload.UploadStoryViewmodel
 
@@ -33,6 +34,8 @@ class ViewModelFactory(
             return DetailViewModel(pref) as T
         } else if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
             return MapsViewModel(pref) as T
+        } else if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
+            return ProfileViewModel(pref, Injection.provideRepos()) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
 

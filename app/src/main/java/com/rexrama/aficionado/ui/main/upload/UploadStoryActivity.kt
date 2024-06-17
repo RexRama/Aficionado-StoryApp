@@ -1,7 +1,6 @@
 package com.rexrama.aficionado.ui.main.upload
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.pm.PackageManager
@@ -24,7 +23,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rexrama.aficionado.R
 import com.rexrama.aficionado.databinding.ActivityUploadStoryBinding
-import com.rexrama.aficionado.ui.auth.welcome.WelcomeActivity
 import com.rexrama.aficionado.ui.main.home.MainActivity
 import com.rexrama.aficionado.utils.UserPreference
 import com.rexrama.aficionado.utils.Util
@@ -131,6 +129,7 @@ class UploadStoryActivity : AppCompatActivity() {
                 imageFile.name,
                 requestImage
             )
+
             if (lat != null && lon != null) {
                 viewModel.postStory(token, imageMultipart, description, lat, lon)
             } else {
@@ -236,24 +235,9 @@ class UploadStoryActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
 
-                R.id.logout -> {
-                    AlertDialog.Builder(this).apply {
-                        setTitle("LogOut")
-                        setMessage("Are you sure you want to logout?")
-                        setPositiveButton("Yes") { _, _ ->
-                            viewModel.logout()
-                            val intent = Intent(context, WelcomeActivity::class.java)
-                            intent.flags =
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                            finish()
-                        }
-                        setNegativeButton("No") { _, _ ->
-
-                        }
-                        create()
-                        show()
-                    }
+                R.id.to_profile -> {
+                    Util().toProfile(this)
+                    finish()
                     return@setOnItemSelectedListener true
                 }
 

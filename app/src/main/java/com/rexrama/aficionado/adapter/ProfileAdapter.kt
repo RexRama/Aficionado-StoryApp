@@ -10,7 +10,8 @@ import com.rexrama.aficionado.data.remote.response.ListStoryItem
 import com.rexrama.aficionado.databinding.ItemListStoriesBinding
 import com.rexrama.aficionado.utils.Util
 
-class StoryAdapter :PagingDataAdapter<ListStoryItem,StoryAdapter.ListViewHolder>(DIFF_CALLBACK) {
+class ProfileAdapter :
+    PagingDataAdapter<ListStoryItem, ProfileAdapter.ListViewHolder>(DIFF_CALLBACK){
 
     private var onItemClickCallBack: Util.OnItemClickCallBack? = null
 

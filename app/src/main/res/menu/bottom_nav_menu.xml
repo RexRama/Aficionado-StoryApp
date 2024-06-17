@@ -3,27 +3,27 @@
     <item
         android:id="@+id/to_home"
         android:enabled="true"
-        android:icon="@drawable/baseline_home_24"
         android:title="@string/home"
+        android:icon="@drawable/baseline_home_24"
         />
     <item
         android:id="@+id/add_story"
         android:enabled="true"
+        android:title="@string/upload"
         android:icon="@drawable/outline_add_box_24"
-        android:title="@string/upload_story"
         />
 
     <item
         android:id="@+id/to_location"
         android:enabled="true"
+        android:title="@string/location"
         android:icon="@drawable/baseline_location_on_24"
-        android:title="@string/map"
         />
 
     <item
-        android:id="@+id/logout"
+        android:id="@+id/to_profile"
         android:enabled="true"
-        android:icon="@drawable/outline_logout_24"
-        android:title="@string/logout"
+        android:title="@string/profile"
+        android:icon="@drawable/baseline_account_circle_24"
         />
 </menu>

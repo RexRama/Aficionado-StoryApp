@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -20,7 +22,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
 
+        // Set BASE_URL and WEB_CLIENT_ID in BuildConfig from your local.properties
+        buildConfigField("String", "BASE_URL", "\"${properties.getProperty("BASE_URL")}\"")
     }
 
     testOptions {
@@ -35,11 +41,9 @@ android {
 
     buildTypes {
         release {
-            val baseUrl: String = project.findProperty("BASE_URL") as String? ?: ""
             val mapsApiKey: String = project.findProperty("MAPS_API_KEY") as String? ?: ""
 
             // Use the BASE_URL and API_KEY from local.properties
-            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
             manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
             isMinifyEnabled = false
@@ -50,10 +54,8 @@ android {
         }
 
         debug {
-            val baseUrl: String = project.findProperty("BASE_URL") as String? ?: ""
             val mapsApiKey: String = project.findProperty("MAPS_API_KEY") as String? ?: ""
             // Use the BASE_URL and API_KEY from local.properties
-            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
             manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
         }

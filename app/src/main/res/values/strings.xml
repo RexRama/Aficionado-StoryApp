@@ -50,4 +50,9 @@
     <string name="error_request_timeout">Error: Request Timeout</string>
     <string name="retry">Retry</string>
     <string name="password_requirement">Requires 8 characters or more!</string>
+    <string name="carousel_image">carousel image</string>
+    <string name="posted">Posted</string>
+    <string name="bookmarked">Bookmarked</string>
+    <string name="profile">profile</string>
+    <string name="location">location</string>
 </resources>

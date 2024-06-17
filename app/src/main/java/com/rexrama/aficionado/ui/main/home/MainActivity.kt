@@ -17,11 +17,11 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rexrama.aficionado.R
+import com.rexrama.aficionado.adapter.CarouselAdapter
 import com.rexrama.aficionado.adapter.LoadingAdapter
 import com.rexrama.aficionado.adapter.StoryAdapter
 import com.rexrama.aficionado.data.remote.response.ListStoryItem
 import com.rexrama.aficionado.databinding.ActivityMainBinding
-import com.rexrama.aficionado.ui.auth.welcome.WelcomeActivity
 import com.rexrama.aficionado.ui.main.detail.DetailActivity
 import com.rexrama.aficionado.utils.UserPreference
 import com.rexrama.aficionado.utils.Util
@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var storyAdapter: StoryAdapter
+    private lateinit var carouselAdapter: CarouselAdapter
 
     private var doubleBackToExit = false
 
@@ -43,11 +44,34 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.selectedItemId = R.id.to_home
         setupNavigation(bottomNavigation)
 
+        setCarousel()
         setView()
         val dataStore = UserPreference.getInstance(dataStore)
         setViewModel(dataStore)
         setBackButton()
         setPermission()
+    }
+
+    private fun setCarousel() {
+        binding.rvCarousel.apply {
+            layoutManager =
+                LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+        }
+        carouselAdapter = CarouselAdapter()
+        binding.rvCarousel.adapter = carouselAdapter
+
+        carouselAdapter.setOnItemClickCallback(object : Util.OnItemClickCallBack{
+            override fun onItemClicked(data: ListStoryItem) {
+                val toDetail = Intent(this@MainActivity, DetailActivity::class.java).apply {
+                    putExtra("name", data.name)
+                    putExtra("url", data.photoUrl)
+                    putExtra("description", data.description)
+                    putExtra("date", data.createdAt.take(10))
+                }
+                startActivity(toDetail)
+
+            }
+        })
     }
 
     private fun setView() {
@@ -59,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        storyAdapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallBack {
+        storyAdapter.setOnItemClickCallback(object : Util.OnItemClickCallBack {
             override fun onItemClicked(data: ListStoryItem) {
                 val toDetail = Intent(this@MainActivity, DetailActivity::class.java).apply {
                     putExtra("name", data.name)
@@ -76,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         storyAdapter.addLoadStateListener { loadState ->
             showLoading(loadState)
         }
+
     }
 
     private fun setViewModel(pref: UserPreference) {
@@ -87,6 +112,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.setToken(token)
             viewModel.fetchStories().observe(this) { pagingData ->
                 storyAdapter.submitData(lifecycle, pagingData)
+                carouselAdapter.submitData(lifecycle, pagingData)
             }
         }
 
@@ -146,24 +172,9 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
 
-                R.id.logout -> {
-                    android.app.AlertDialog.Builder(this).apply {
-                        setTitle("LogOut")
-                        setMessage("Are you sure you want to logout?")
-                        setPositiveButton("Yes") { _, _ ->
-                            viewModel.logout()
-                            val intent = Intent(context, WelcomeActivity::class.java)
-                            intent.flags =
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                            finish()
-                        }
-                        setNegativeButton("No") { _, _ ->
-
-                        }
-                        create()
-                        show()
-                    }
+                R.id.to_profile -> {
+                    Util().toProfile(this)
+                    finish()
                     return@setOnItemSelectedListener true
                 }
 

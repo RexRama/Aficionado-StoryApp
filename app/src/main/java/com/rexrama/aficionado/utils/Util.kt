@@ -2,8 +2,10 @@ package com.rexrama.aficionado.utils
 
 import android.content.Context
 import android.content.Intent
+import com.rexrama.aficionado.data.remote.response.ListStoryItem
 import com.rexrama.aficionado.ui.main.home.MainActivity
 import com.rexrama.aficionado.ui.main.map.MapsActivity
+import com.rexrama.aficionado.ui.main.profile.ProfileActivity
 import com.rexrama.aficionado.ui.main.upload.UploadStoryActivity
 
 class Util {
@@ -20,6 +22,15 @@ class Util {
     fun toLocation(context: Context) {
         val toLocation = Intent(context, MapsActivity::class.java)
         context.startActivity(toLocation)
+    }
+
+    fun toProfile(context: Context){
+        val toProfile = Intent(context, ProfileActivity::class.java)
+        context.startActivity(toProfile)
+    }
+
+    interface OnItemClickCallBack {
+        fun onItemClicked(data: ListStoryItem)
     }
 
 }
